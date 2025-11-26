@@ -37,7 +37,7 @@ jobs:
       
       - name: set up deck running as an ephemeral container
         run: |
-          deck='docker run --rm -v .:/files -w /files kong/deck'
+          alias deck='docker run --rm -v .:/files -w /files kong/deck'
           if [[ $? -eq 0 ]]; then
             echo "Command succeeded!"
           else
