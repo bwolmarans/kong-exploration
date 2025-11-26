@@ -47,7 +47,7 @@ jobs:
           
       - name: declare my config and sync on push brett_latest.yaml to the main branch of this repo
         run: |
-          docker run --rm -v .:/files -w /files kong/deck gateway sync --konnect-token ${{ secrets.KONNECT_TOKEN }} --konnect-control-plane-name ${{ vars.konnect-control-plane-name }} latest.yaml
+          docker run --rm -v .:/files -w /files kong/deck gateway sync --konnect-token ${{ secrets.KONNECT_TOKEN }} --konnect-control-plane-name ${{ vars.KONNECT_CONTROL_PLANE_NAME }} ./latest.yaml
           if [[ $? -eq 0 ]]; then
             echo "Gateway Sync Command succeeded!"
           else
