@@ -1,0 +1,60 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
+      
+      - name: set up deck running as an ephemeral container
+        run: |
+          deck='docker run --rm -v .:/files -w /files kong/deck'
+          if [[ $? -eq 0 ]]; then
+            echo "Command succeeded!"
+          else
+            echo "Docker Run Command failed with exit code $?"
+            exit 1 # Fail the step explicitly if needed
+          fi
+          
+      - name: declare my config and sync on push brett_latest.yaml to the main branch of this repo
+        run: |
+          deck gateway sync --konnect-token ${{ secrets.KONNECT_TOKEN }} --konnect-control-plane-name ${{ vars.konnect-control-plane-name }} latest.yaml
+          if [[ $? -eq 0 ]]; then
+            echo "Gateway Sync Command succeeded!"
+          else
+            echo "Command failed with exit code $?"
+            exit 1 # Fail the step explicitly if needed
+          fi
+         
+
+        
+        
